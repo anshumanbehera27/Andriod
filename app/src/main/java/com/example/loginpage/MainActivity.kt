@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -24,9 +25,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        myAuth = FirebaseAuth.getInstance()
 
-        val btn: Button = findViewById(btnLogin)
+
         val etUserName: TextInputEditText = findViewById(R.id.tietUsername)
         val etPassword: TextInputEditText = findViewById(R.id.tietPassword)
 
@@ -45,20 +48,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         // TODO 2: set a click action
-        btn.setOnClickListener {
+       binding.btnLogin.setOnClickListener {
             // TODO 1: get values from ets
-            val username = etUserName.text.toString()
-            val password = etPassword.text.toString()
+            val username = binding.tietUsername.text.toString()
+            val password = binding.tietPassword.text.toString()
 
             // TODO 3: safety checks on user inputs
             if(username.isBlank()) {
                 // Show an error "Please enter a valid username"
-                usernameLayout.error = "Please enter a valid username"
+                binding.etUsername.error = "Please enter a valid username"
             }
 
             if(password.isEmpty()) {
                 //Show error
-                passwordLayout.error = "Please enter a password first"
+                binding.etPassword.error = "Please enter a password first"
             }
             // TODO check if the user exit
             // if exits then go to the next screen
@@ -67,6 +70,29 @@ class MainActivity : AppCompatActivity() {
 
             // TODO 4: Display a Toast on button click
             if(checkFormDetails(username, password)) {
+                myAuth.signInWithEmailAndPassword(username , password ).addOnCompleteListener{
+                    if (it.isSuccessful){
+                        Log.d("wiuebf","sin in Sucessfull")
+                    }
+                    else
+                    {
+                        Log.d("sjhgdhjdg" , "${it.exception}")
+                        // add a check
+                      //  if(it.exception of the type FirebaseInvalidUserException)
+                        // creat a new User
+                        myAuth.createUserWithEmailAndPassword(username , password).addOnCompleteListener { singUpTask ->
+                            if (singUpTask.isSuccessful){
+                                Log.d("wjhbvi" , "SingUP SucessFull")
+
+                            }
+                            else{
+                                Log.d("juebfon" , "${singUpTask.exception}")
+                            }
+                        }
+                    }
+                }
+
+
                 Toast.makeText(this@MainActivity, "Login Successful", Toast.LENGTH_SHORT).show()
 
                 val intent = Intent(this@MainActivity, welcome_activity::class.java)
