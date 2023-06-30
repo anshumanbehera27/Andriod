@@ -13,16 +13,13 @@ import com.example.loginpage.R.id.btnLogin
 import com.example.loginpage.databinding.ActivityMainBinding
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 
 // TODO 1 : how to pass a dataclass object from one activity to other , Using INtents
 // TODO 2 : how to pass a normal class object from one activity to other ,using Intents
 // todo parcelbale and seriable
 class MainActivity : AppCompatActivity() {
     // with in the scop of this Activity , you can get its referance by using This keyword
-    private  lateinit var myAuth : FirebaseAuth
-    private lateinit var binding : ActivityMainBinding
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
